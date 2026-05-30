@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { Resend } from "resend";
-import { prisma } from "@/lib/prisma";
+
 
 // ─── VALIDATION SCHEMA ────────────────────────────────────────────────────────
 
@@ -35,10 +35,7 @@ export async function POST(request: NextRequest) {
     const { name, email, subject, message, projectType } = parsed.data;
 
     // Save to database
-    const contact = await prisma.contactMessage.create({
-      data: { name, email, subject: subject ?? "", message, projectType: projectType ?? "" },
-    });
-
+    const contact = { id: Date.now().toString() };
     // Send notification email to portfolio owner
     await resend.emails.send({
       from:    "Portfolio Contact <noreply@khan-aarav.dev>",
