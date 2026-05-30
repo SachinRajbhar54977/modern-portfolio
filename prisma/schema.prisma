@@ -1,0 +1,92 @@
+// ─── PRISMA SCHEMA ────────────────────────────────────────────────────────────
+// Run: npx prisma generate && npx prisma db push
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── CONTACT MESSAGES ────────────────────────────────────────────────────────
+
+model ContactMessage {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  subject     String?
+  message     String   @db.Text
+  projectType String?
+  status      MessageStatus @default(UNREAD)
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
+  @@map("contact_messages")
+}
+
+enum MessageStatus {
+  UNREAD
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// ─── PAGE ANALYTICS ───────────────────────────────────────────────────────────
+
+model PageView {
+  id        String   @id @default(cuid())
+  path      String
+  referrer  String?
+  userAgent String?
+  country   String?
+  duration  Int?     // seconds on page
+  createdAt DateTime @default(now())
+
+  @@index([path])
+  @@index([createdAt])
+  @@map("page_views")
+}
+
+// ─── PROJECT VIEWS (optional analytics) ──────────────────────────────────────
+
+model ProjectView {
+  id        String   @id @default(cuid())
+  projectId String
+  action    ProjectAction @default(VIEW)
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+  @@map("project_views")
+}
+
+enum ProjectAction {
+  VIEW
+  GITHUB_CLICK
+  DEMO_CLICK
+}
+
+// ─── NEWSLETTER (optional) ────────────────────────────────────────────────────
+
+model NewsletterSubscriber {
+  id          String   @id @default(cuid())
+  email       String   @unique
+  status      SubscriberStatus @default(ACTIVE)
+  source      String?
+  subscribedAt DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([email])
+  @@map("newsletter_subscribers")
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}

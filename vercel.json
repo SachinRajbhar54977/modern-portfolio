@@ -1,0 +1,54 @@
+{
+  "version": 2,
+  "name": "ai-engineer-portfolio",
+  "framework": "nextjs",
+  "regions": ["bom1"],
+  "buildCommand": "npx prisma generate && next build",
+  "devCommand": "next dev",
+  "outputDirectory": ".next",
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options",  "value": "nosniff" },
+        { "key": "X-Frame-Options",          "value": "DENY" },
+        { "key": "X-XSS-Protection",         "value": "1; mode=block" },
+        { "key": "Referrer-Policy",           "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy",        "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/cv",
+      "destination": "/resume-khan-aarav.pdf",
+      "permanent": false
+    },
+    {
+      "source": "/github",
+      "destination": "https://github.com/khan-aarav",
+      "permanent": false
+    }
+  ],
+  "env": {
+    "DATABASE_URL":                       "@database-url",
+    "CLERK_SECRET_KEY":                   "@clerk-secret-key",
+    "RESEND_API_KEY":                     "@resend-api-key",
+    "CONTACT_EMAIL":                      "@contact-email",
+    "GITHUB_USERNAME":                    "@github-username",
+    "GITHUB_TOKEN":                       "@github-token",
+    "ADMIN_API_KEY":                      "@admin-api-key"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "@next-public-clerk-publishable-key",
+      "NEXT_PUBLIC_SITE_URL":              "@next-public-site-url"
+    }
+  }
+}
