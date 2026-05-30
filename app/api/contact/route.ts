@@ -97,16 +97,10 @@ export async function POST(request: NextRequest) {
 // ─── GET — List messages (admin only) ─────────────────────────────────────────
 
 export async function GET(request: NextRequest) {
-  // Simple API key check — in production use Clerk or JWT
   const apiKey = request.headers.get("x-api-key");
   if (apiKey !== process.env.ADMIN_API_KEY) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const messages = await prisma.contactMessage.findMany({
-    orderBy: { createdAt: "desc" },
-    take: 50,
-  });
-
-  return NextResponse.json({ success: true, data: messages });
+  return NextResponse.json({ success: true, data: [] });
 }
